@@ -7,7 +7,11 @@ export default class ButtonX extends React.Component{
             <Button
                 title={this.props.title}
                 type="solid"
-                buttonStyle={{
+                buttonStyle={this.props.full ? {
+                    backgroundColor:'green',
+                    width:'100%',
+                    marginLeft:'15%'
+                } : {
                     backgroundColor:'green',
                     width:'60%',
                     marginLeft:'20%'

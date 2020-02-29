@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { View, Container, Text, Content, Body } from 'native-base';
+import { View, Container, Text, Content, Body, Right, Left } from 'native-base';
 import Navbar from '../components/Navbar';
 import ButtonX from '../components/Button';
 import Firebase from '../Firebase/firebase';
-
+import CardValue from '../components/Cards'
 
 export default class Candidates extends React.Component{
 
@@ -37,8 +37,8 @@ export default class Candidates extends React.Component{
         })
     }
 
-    information = () =>{
-        console.log("information")
+    castVote = (item) =>{
+        console.log("information", item)
     }
 
     candidate = () =>{
@@ -51,22 +51,27 @@ export default class Candidates extends React.Component{
         return(
             <Container>
             <Navbar title="Select Candidate" />
+                <View>
+                    <Left/>
+                    <Body />
+                    <Right>
+                        <Text>UnSafe</Text>
+                    </Right>
+                </View>   
                 <Content style={{marginTop:'20%'}}>
-                    
-                        <ButtonX title="User Dashboard" onClick={this.information} />
-                    
-                </Content>
-                <Content>
-                    
-                        <ButtonX title="Constituency" onClick={this.constituency} />
-                    
-                </Content>
-                <Content>
-                    
-                        <ButtonX title="Candidate" onClick={this.candidate} />
-                    
+                    {this.state.result.map((item,index)=>
+                        <Content>
+                            <CardValue
+                                key={item.candidateID}
+                                name={item.name}
+                                onClick={() =>this.castVote(item)}
+                            />
+                        </Content>    
+                    )}
                 </Content>
             </Container>
         )
     }
 }
+
+// <ButtonX title="User Dashboard" onClick={this.information} />
