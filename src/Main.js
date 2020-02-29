@@ -4,6 +4,7 @@ import { BackHandler } from 'react-native';
 import { Root } from 'native-base';
 import Login from './pages/Login'
 import Home from './pages/Home'
+import Candidate from './pages/Candidate'
 
 export default class Main extends React.Component{
     // componentWillMount = () => {
@@ -19,6 +20,7 @@ componentDidMount() {
                 <Router>              
                     <Scene key="root">
                         <Scene key="login" component={Login} hideNavBar />
+                        <Scene key="candidates" component={Candidate} hideNavBar />
                         <Scene initial key="login" component={Home} hideNavBar />
                     </Scene>
                 </Router>

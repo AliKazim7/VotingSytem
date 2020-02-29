@@ -2,12 +2,39 @@ import React, { Component } from 'react';
 import { View, Container, Text, Content, Body } from 'native-base';
 import Navbar from '../components/Navbar';
 import ButtonX from '../components/Button';
-import { Actions } from 'react-native-router-flux';
+import Firebase from '../Firebase/firebase';
 
 
-export default class Home extends React.Component{
+export default class Candidates extends React.Component{
+
+    constructor(props) {
+        super(props);
+        this.state= {
+            address:'',
+            candidateID:'',
+            gender:'',
+            name:'',
+            result: []
+        }
+    }
     componentDidMount() {
-        console.log("here login")
+        console.log("candidate section")
+        var array = []
+        const userData = Firebase.firestore();
+        userData.collection('candidates').get().then(querySnapshot => {
+            const data = querySnapshot.docs.map(doc => doc.data());
+            for(var i = 0 ;i < data.length; i++){
+                array.push({
+                    address: data[i].address,
+                    candidateID: data[i].candidateID,
+                    gender: data[i].gender,
+                    name: data[i].name
+                })
+            }
+            this.setState({
+                result: array
+            })  
+        })
     }
 
     information = () =>{
@@ -16,7 +43,6 @@ export default class Home extends React.Component{
 
     candidate = () =>{
         console.log("candidate")
-        Actions.candidates()
     }
     constituency = () =>{
         console.log("constituency")
@@ -24,7 +50,7 @@ export default class Home extends React.Component{
     render(){
         return(
             <Container>
-            <Navbar title="User Dashboard" />
+            <Navbar title="Select Candidate" />
                 <Content style={{marginTop:'20%'}}>
                     
                         <ButtonX title="User Dashboard" onClick={this.information} />
