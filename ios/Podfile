@@ -37,6 +37,7 @@ target 'votingSystem' do
 
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
 
+
   target 'votingSystemTests' do
     inherit! :search_paths
     # Pods for testing

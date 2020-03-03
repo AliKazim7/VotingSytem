@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Container, Text, Content, Body, Right, Left, Toast, Spinner } from 'native-base';
+import { View, Container, Text, Content, Body, Right, Left, Toast, Spinner, Footer } from 'native-base';
 import { Overlay } from 'react-native-elements';
 import Navbar from '../components/Navbar';
 import ButtonX from '../components/Button';
@@ -19,11 +19,13 @@ export default class Candidates extends React.Component{
             gender:'',
             modalVisible: false,
             name:'',
+            arrayValue:[],
             result: []
         }
     }
     componentDidMount() {
         console.log("candidate section")
+        console.disableYellowBox = true;
         this.setState({
             showLoader: true
         })
@@ -71,16 +73,46 @@ export default class Candidates extends React.Component{
     addVote = (value, item) =>{
         console.log("candidate", value, item.candidateID)
         var ID = item.candidateID
+        this.setState({
+            showLoader: true
+        })
+        var array = []
         const userData = Firebase.firestore();
         userData.collection('votes').where('candidateID',"==", ID).get()
-        .then(function(querySnapshot) {
-            querySnapshot.forEach(function(doc) {
-                // doc.data() is never undefined for query doc snapshots
-                console.log(doc.id, " => ", doc.data());
-            });
+        .then(querySnapshot => {
+            const data = querySnapshot.docs.map(doc => doc.data());        // doc.data() is never undefined for query doc snapshots
+            console.log("data value", data)
+            array.push({
+                voteID: data[0].voteID,
+                count: data[0].count,
+                name: data[0].candidateName,
+                candidateID: data[0].candidateID
+            })
+            console.log("array value", array)
+            let voteID = data[0].voteID
+            console.log("data[0", data[0].count + 1)
+            userData.collection("votes").doc(voteID).update({
+                count: data[0].count + 1,
+                safe: value
+            }).then(response =>{
+                this.setState({
+                    showLoader: false,
+                    arrayValue: array,
+                    modalVisible: true
+                })
+            })
         })
     }
+
+    closeModal = () =>{
+        console.log("close modal")
+        this.setState({
+            modalVisible: false
+        })
+    }
+
     render(){
+        console.log("close", this.state.arrayValue)
         if(this.state.showLoader === true){
             return(
                 <Spinner />
@@ -91,12 +123,15 @@ export default class Candidates extends React.Component{
                 <Navbar title="Select Candidate" />
                     <Overlay
                         isVisible={this.state.modalVisible}
-                        windowBackgroundColor="rgba(255, 255, 255, .5)"
-                        overlayBackgroundColor="red"
+                        windowBackgroundColor="rgba(0,0,0,.5)"
+                        overlayBackgroundColor="white"
                         width="auto"
-                        height="auto"
+                        height="30%"
                         >
-                        <Text>Hello from Overlay!</Text>
+                        <Content>
+                            <Text style={{marginLeft:'30%'}}>{this.state.arrayValue.length > 0 ?  this.state.arrayValue[0].name : null}</Text>
+                        </Content>
+                        <ButtonX title="Close" onClick={() => this.closeModal() } />
                     </Overlay>
                     <Content>
                         {this.state.result.map((item,index)=>
