@@ -6,11 +6,11 @@ import ButtonX from '../components/Button';
 import Firebase from '../Firebase/firebase';
 import CardValue from '../components/Cards'
 import { Modal, Alert } from 'react-native';
-import { TouchableHighlight } from 'react-native-gesture-handler';
+import { TouchableHighlight, TouchableOpacity } from 'react-native-gesture-handler';
 import { Actions } from 'react-native-router-flux';
+import QRCode from 'react-native-qrcode-svg';
 
 export default class Candidates extends React.Component{
-
     constructor(props) {
         super(props);
         this.state= {
@@ -23,6 +23,7 @@ export default class Candidates extends React.Component{
             arrayValue:[],
             result: []
         }
+        this.svg = null;
     }
     componentDidMount() {
         console.log("candidate section")
@@ -113,6 +114,18 @@ export default class Candidates extends React.Component{
         Actions.home()
     }
 
+    shareQR = () => {
+        console.log("svg value", this.svg)
+        this.svg.toDataURL((data) => {
+          const shareImageBase64 = {
+            title: "QR",
+            message: "Ehi, this is my QR code",
+            url: `data:image/png;base64,${data}`
+          };
+          Share.open(shareImageBase64);
+        });
+      }
+
     render(){
         console.log("close", this.state.arrayValue)
         if(this.state.showLoader === true){
@@ -130,9 +143,14 @@ export default class Candidates extends React.Component{
                         width="auto"
                         height="30%"
                         >
-                        <Content>
-                            <Text style={{marginLeft:'30%'}}>{this.state.arrayValue.length > 0 ?  this.state.arrayValue[0].name : null}</Text>
+                        <Content style={{marginBottom:'10%'}}>
+                            <Text style={{marginLeft:'30%', marginBottom:'10%'}}>{this.state.arrayValue.length > 0 ?  this.state.arrayValue[0].name : null}</Text>
+                            <QRCode 
+                            getRef={(c) => (this.svg = c)}
+                            value={this.state.arrayValue.length > 0 ? this.state.arrayValue[0].voteID : "vote casted"}
+                        />
                         </Content>
+                        <ButtonX title="Save to gallery" onClick={this.shareQR} />
                         <ButtonX title="Close" onClick={() => this.closeModal() } />
                     </Overlay>
                     <Content>

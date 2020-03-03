@@ -3,37 +3,64 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
+  ToastAndroid,
   Text,
   TouchableOpacity,
   Linking,
 } from 'react-native';
- 
+
+
+import CameraRoll from "@react-native-community/cameraroll";
+import RNFS from "react-native-fs"
 import QRCodeScanner from 'react-native-qrcode-scanner';
+import QRCode from 'react-native-qrcode-svg';
+import ButtonX from './src/components/Button';
+import { View } from 'native-base';
  
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state= {
+        address:'',
+        showLoader: false,
+        candidateID:'',
+        gender:'',
+        modalVisible: false,
+        name:'',
+        arrayValue:[],
+        result: []
+    }
+    this.svg = null;
+}
   onSuccess = (e) => {
     Linking
       .openURL(e.data)
       .catch(err => console.error('An error occured', err));
   }
  
+  shareQR = () => {
+    console.log("svg value", this.svg)
+    this.svg.toDataURL((data) => {
+      RNFS.writeFile(RNFS.CachesDirectoryPath+"/some-name.png", data, 'base64')
+        .then((success) => {
+          return CameraRoll.saveToCameraRoll(RNFS.CachesDirectoryPath+"/some-name.png", 'photo')
+        })
+        .then((response) => {
+          console.log("Response", response)
+          // this.setState({ busy: false, imageSaved: true  })
+          // ToastAndroid.show('Saved to gallery !!', ToastAndroid.SHORT)
+        })
+    })
+  }
   render() {
     return (
-      <QRCodeScanner
-        onRead={this.onSuccess}
-        // flashMode={QRCodeScanner.Constants.FlashMode.torch}      
-        topContent={
-          
-          <Text style={styles.centerText}>
-            Go to <Text style={styles.textBold}>wikipedia.org/wiki/QR_code</Text> on your computer and scan the QR code.
-          </Text>
-        }
-        bottomContent={
-          <TouchableOpacity style={styles.buttonTouchable}>
-            <Text style={styles.buttonText}>OK. Got it!</Text>
-          </TouchableOpacity>
-        }
+      <View>
+      <QRCode
+        value="gg motherfucker"
+        getRef={(c) => (this.svg = c)}
       />
+      <ButtonX title="Save to gallery" onClick={this.shareQR} />
+      </View>
     );
   }
 }
