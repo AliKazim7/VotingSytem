@@ -12,7 +12,8 @@
   "dependencies": {
     "@react-native-community/masked-view": "^0.1.6",
     "@react-navigation/native": "^5.0.8",
-    "firebase": "^7.9.3",
+    "base-64": "^0.1.0",
+    "firebase": "7.9.0",
     "native-base": "^2.13.8",
     "react": "16.9.0",
     "react-native": "0.61.5",
