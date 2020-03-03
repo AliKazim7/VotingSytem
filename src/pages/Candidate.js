@@ -7,6 +7,7 @@ import Firebase from '../Firebase/firebase';
 import CardValue from '../components/Cards'
 import { Modal, Alert } from 'react-native';
 import { TouchableHighlight } from 'react-native-gesture-handler';
+import { Actions } from 'react-native-router-flux';
 
 export default class Candidates extends React.Component{
 
@@ -66,7 +67,7 @@ export default class Candidates extends React.Component{
               {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
               {text: 'Yes', onPress: () => this.addVote('safe',item)},
             ],
-            { cancelable: false }
+            { cancelable: true }
           )
     }
     
@@ -109,6 +110,7 @@ export default class Candidates extends React.Component{
         this.setState({
             modalVisible: false
         })
+        Actions.home()
     }
 
     render(){

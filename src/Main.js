@@ -21,7 +21,7 @@ componentDidMount() {
                     <Scene key="root">
                         <Scene key="login" component={Login} hideNavBar />
                         <Scene key="candidates" component={Candidate} hideNavBar />
-                        <Scene initial key="login" component={Home} hideNavBar />
+                        <Scene initial key="home" component={Home} hideNavBar />
                     </Scene>
                 </Router>
             </Root>
