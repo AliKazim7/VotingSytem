@@ -141,14 +141,16 @@ export default class Candidates extends React.Component{
                         windowBackgroundColor="rgba(0,0,0,.5)"
                         overlayBackgroundColor="white"
                         width="auto"
-                        height="30%"
+                        height="50%"
                         >
                         <Content style={{marginBottom:'10%'}}>
                             <Text style={{marginLeft:'30%', marginBottom:'10%'}}>{this.state.arrayValue.length > 0 ?  this.state.arrayValue[0].name : null}</Text>
-                            <QRCode 
-                            getRef={(c) => (this.svg = c)}
-                            value={this.state.arrayValue.length > 0 ? this.state.arrayValue[0].voteID : "vote casted"}
-                        />
+                            <Body>
+                                <QRCode 
+                                    getRef={(c) => (this.svg = c)}
+                                    value={this.state.arrayValue.length > 0 ? this.state.arrayValue[0].voteID : "vote casted"}
+                                />
+                            </Body>
                         </Content>
                         <ButtonX title="Save to gallery" onClick={this.shareQR} />
                         <ButtonX title="Close" onClick={() => this.closeModal() } />
